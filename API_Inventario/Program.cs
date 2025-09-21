@@ -17,9 +17,12 @@ builder.Services.AddDbContext<Context>(opt =>
 );
 
 builder.Services.AddValidatorsFromAssemblyContaining<CategoriaValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<ProveedorValidator>();
 
 builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
 builder.Services.AddScoped<ICategoriaService, CategoriaService>();
+builder.Services.AddScoped<IProveedorRepository, ProveedorRepository>();
+builder.Services.AddScoped<IProveedorService, ProveedorService>();
 
 var app = builder.Build();
 
