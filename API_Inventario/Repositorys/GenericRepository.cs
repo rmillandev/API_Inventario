@@ -52,7 +52,6 @@ namespace API_Inventario.Repositorys
             return new CreateSuccessResponse<T>
             {
                 Success = true,
-                Data = data,
                 Message = "Registro creado exitosamente."
             };
         }
