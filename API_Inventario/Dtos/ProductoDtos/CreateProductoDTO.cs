@@ -1,6 +1,6 @@
 ﻿using API_Inventario.Models;
 
-namespace API_Inventario.Dtos
+namespace API_Inventario.Dtos.ProductoDtos
 {
     public class CreateProductoDTO
     {

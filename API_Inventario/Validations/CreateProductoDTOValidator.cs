@@ -1,4 +1,4 @@
-﻿using API_Inventario.Dtos;
+﻿using API_Inventario.Dtos.ProductoDtos;
 using FluentValidation;
 
 namespace API_Inventario.Validations
