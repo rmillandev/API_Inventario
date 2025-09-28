@@ -1,9 +1,6 @@
 ﻿using API_Inventario.Db;
 using API_Inventario.Models;
 using API_Inventario.Repositorys.Interfaces;
-using API_Inventario.Utils;
-using API_Inventario.Utils.Exceptions;
-using API_Inventario.Utils.Objects;
 using Microsoft.EntityFrameworkCore;
 
 namespace API_Inventario.Repositorys
@@ -20,12 +17,5 @@ namespace API_Inventario.Repositorys
         {
             return await entities.AnyAsync(p => p.Codigo == codigo);
         }
-
-        public async Task DeleteByCodigoProducto(int codigo)
-        {
-            int deleted = await entities.Where(p => p.Codigo == codigo).ExecuteDeleteAsync();
-            if (deleted == 0) throw new BusinessException("Este codigo de producto no existe.");
-        }
-
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace API_Inventario.Dtos.ProductoDtos
+﻿namespace API_Inventario.Dtos
 {
     public class UpdateProductoDTO
     {
