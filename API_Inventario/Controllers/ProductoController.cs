@@ -1,4 +1,5 @@
 ﻿using API_Inventario.Dtos;
+using API_Inventario.Dtos.ProductoDtos;
 using API_Inventario.Models;
 using API_Inventario.Services.Interfaces;
 using API_Inventario.Utils.Exceptions;
@@ -21,6 +22,23 @@ namespace API_Inventario.Controllers
         }
 
 
+        [HttpGet]
+        public async Task<ActionResult<PagedResult<ReadProductoDTO>>> GetAll([FromQuery] int? pageNumber, [FromQuery] int? pageSize)
+        {
+            try
+            {
+                var data = await service.GetAllDto(pageNumber, pageSize);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    errorMessage = $"Error interno del servidor: {ex.Message}"
+                });
+            }
+        }
+
         [HttpPost]
         public async Task<ActionResult<CreateSuccessResponse<Producto>>> Create([FromBody] CreateProductoDTO productoDto, [FromServices] IValidator<CreateProductoDTO> validator)
         {
@@ -31,7 +49,7 @@ namespace API_Inventario.Controllers
 
                 if (!resValidator.IsValid) return BadRequest(resValidator);
 
-                Producto producto = new Producto() 
+                Producto producto = new Producto()
                 {
                     Codigo = productoDto.Codigo,
                     Nombre = productoDto.Nombre,
@@ -55,10 +73,29 @@ namespace API_Inventario.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { errorMessage = $"Error interno del servidor: {ex.Message}" });         
+                return StatusCode(500, new { errorMessage = $"Error interno del servidor: {ex.Message}" });
             }
 
         }
-        
+
+        [HttpDelete]
+        [Route("{codigoProducto}")]
+        public async Task<ActionResult> DeleteByCodigoProducto([FromRoute] int codigoProducto)
+        {
+            try
+            {
+                await service.DeleteByCodigoProducto(codigoProducto);
+                return NoContent();
+            }
+            catch (BusinessException ex)
+            {
+                return Conflict(new { errorMessage = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { errorMessage = $"Error interno del servidor: {ex.Message}" });
+            }
+        }
+
     }
 }
