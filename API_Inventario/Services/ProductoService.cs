@@ -5,15 +5,18 @@ using API_Inventario.Services.Interfaces;
 using API_Inventario.Utils;
 using API_Inventario.Utils.Exceptions;
 using API_Inventario.Utils.Objects;
+using AutoMapper;
 
 namespace API_Inventario.Services
 {
     public class ProductoService : GenericService<Producto>, IProductoService
     {
         private readonly IProductoRepository repository;
-        public ProductoService(IProductoRepository repository) : base(repository)
+        private readonly IMapper mapper;
+        public ProductoService(IProductoRepository repository, IMapper mapper) : base(repository)
         {
-            this.repository = repository;
+            this.repository = repository; 
+            this.mapper = mapper;
         }
 
         private async Task<bool> ExistsByCodigo(int codigo)
@@ -55,12 +58,16 @@ namespace API_Inventario.Services
             await repository.DeleteByCodigoProducto(codigo);
         }
 
-        public async Task UpdateProducto(int codigo, Producto producto)
+        public async Task UpdateProducto(int codigo, UpdateProductoDTO updateProductoDto)
         {
-            if (codigo != producto.Codigo) throw new BusinessException("El codigo de la ruta no coincide con el del cuerpo de la solicitud, por favor verifique.");
+          
+            var producto = await repository.GetByCodigo(codigo);
 
+            if (producto == null) throw new KeyNotFoundException("El codigo de este producto no existe.");
 
+            mapper.Map(updateProductoDto, producto);
 
+            await repository.UpdateProducto(producto);
 
         }
 

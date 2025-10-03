@@ -3,6 +3,7 @@ using API_Inventario.Repositorys;
 using API_Inventario.Repositorys.Interfaces;
 using API_Inventario.Services;
 using API_Inventario.Services.Interfaces;
+using API_Inventario.Utils.Mapper;
 using API_Inventario.Validations;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,8 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<Context>(opt =>
     opt.UseSqlServer(builder.Configuration.GetConnectionString("Connection"))
 );
+
+builder.Services.AddAutoMapper(cfg => {}, typeof(MappingProfileProducto));
 
 builder.Services.AddValidatorsFromAssemblyContaining<CategoriaValidator>();
 builder.Services.AddValidatorsFromAssemblyContaining<ProveedorValidator>();

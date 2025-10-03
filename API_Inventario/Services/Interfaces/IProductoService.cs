@@ -8,6 +8,6 @@ namespace API_Inventario.Services.Interfaces
     {
         Task<PagedResult<ReadProductoDTO>> GetAllDto(int? pageNumber, int? pageSize);
         Task DeleteByCodigoProducto(int codigo);
-        Task UpdateProducto(int codigo, Producto producto);
+        Task UpdateProducto(int codigo, UpdateProductoDTO updateProductoDto);
     }
 }

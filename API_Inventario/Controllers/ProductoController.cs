@@ -78,6 +78,25 @@ namespace API_Inventario.Controllers
 
         }
 
+        [HttpPut]
+        [Route("{codigo}")]
+        public async Task<ActionResult> UpdateProducto([FromRoute] int codigo, [FromBody] UpdateProductoDTO updateProductoDto)
+        {
+            try
+            {
+                await service.UpdateProducto(codigo, updateProductoDto);
+                return NoContent();
+            }
+            catch(KeyNotFoundException ex)
+            {
+                return NotFound(new { errorMessage = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { errorMessage = $"Error interno del servidor: {ex.Message}" });
+            }
+        }
+
         [HttpDelete]
         [Route("{codigoProducto}")]
         public async Task<ActionResult> DeleteByCodigoProducto([FromRoute] int codigoProducto)

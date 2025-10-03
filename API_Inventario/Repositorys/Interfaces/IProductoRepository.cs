@@ -5,6 +5,8 @@ namespace API_Inventario.Repositorys.Interfaces
     public interface IProductoRepository : IGenericRepository<Producto>
     {
         Task<bool> ExistsByCodigo(int codigo);
+        Task<Producto?> GetByCodigo(int codigo); 
         Task DeleteByCodigoProducto(int codigo);
+        Task UpdateProducto(Producto producto);
     }
 }
