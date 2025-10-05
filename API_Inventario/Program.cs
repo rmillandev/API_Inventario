@@ -5,6 +5,7 @@ using API_Inventario.Services;
 using API_Inventario.Services.Interfaces;
 using API_Inventario.Utils.Mapper;
 using API_Inventario.Validations;
+using API_Inventario.Validations.CategoriaValidation;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,9 +20,15 @@ builder.Services.AddDbContext<Context>(opt =>
 
 builder.Services.AddAutoMapper(cfg => {}, typeof(MappingProfileProducto));
 
-builder.Services.AddValidatorsFromAssemblyContaining<CategoriaValidator>();
+// Categoria Validator
+builder.Services.AddValidatorsFromAssemblyContaining<CreateCategoriaValidator>();
+
+// Proveedor Validator
 builder.Services.AddValidatorsFromAssemblyContaining<ProveedorValidator>();
+
+// Producto Validator
 builder.Services.AddValidatorsFromAssemblyContaining<CreateProductoDTOValidator>();
+
 
 builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
 builder.Services.AddScoped<ICategoriaService, CategoriaService>();

@@ -1,4 +1,5 @@
-﻿using API_Inventario.Models;
+﻿using API_Inventario.Dtos.CategoriaDtos;
+using API_Inventario.Models;
 using API_Inventario.Services;
 using API_Inventario.Services.Interfaces;
 using API_Inventario.Utils.Objects;
@@ -21,7 +22,7 @@ namespace API_Inventario.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<PagedResult<Categoria>>> GetAll([FromQuery] int? pageNumber, [FromQuery] int? pageSize)
+        public async Task<ActionResult<PagedResult<ReadCategoriaDTO>>> GetAll([FromQuery] int? pageNumber, [FromQuery] int? pageSize)
         {
             try
             {
@@ -53,18 +54,18 @@ namespace API_Inventario.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<CreateSuccessResponse<Categoria>>> Create(
-            [FromBody] Categoria categoria, 
-            [FromServices] IValidator<Categoria> validator
+        public async Task<ActionResult<CreateSuccessResponse<CreateCategoriaDTO>>> Create(
+            [FromBody] CreateCategoriaDTO categoriaDto, 
+            [FromServices] IValidator<CreateCategoriaDTO> validator
         )
         {
             try
             {
-                var result = await validator.ValidateAsync(categoria);
+                var result = await validator.ValidateAsync(categoriaDto);
 
                 if (!result.IsValid) return BadRequest(result);
 
-                var data = await service.Create(categoria);
+                var data = await service.CreateCategoria(categoriaDto);
 
                 if (!data.Success) return StatusCode(409, new { message = data.Message }); 
 
@@ -81,23 +82,20 @@ namespace API_Inventario.Controllers
 
         [HttpPut]
         [Route("{id}")]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] Categoria categoria, [FromServices] IValidator<Categoria> validator)
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateCategoriaDTO categoriaDto)
         {
             try
             {
-                var item = await service.GetById(id);
-
-                if (item == null) return NotFound();
-
-                var resultValidate = await validator.ValidateAsync(categoria);
-
-                if (!resultValidate.IsValid) return BadRequest(resultValidate);
-
-                await service.Update(id, categoria);
-
+                await service.UpdateCategoria(id, categoriaDto);
                 return NoContent();
-
             } 
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new
+                {
+                    errorMessage = ex.Message
+                });
+            }
             catch (InvalidOperationException ex)
             {
                 return Conflict(new

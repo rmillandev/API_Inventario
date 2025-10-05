@@ -79,12 +79,12 @@ namespace API_Inventario.Controllers
         }
 
         [HttpPut]
-        [Route("{codigo}")]
-        public async Task<ActionResult> UpdateProducto([FromRoute] int codigo, [FromBody] UpdateProductoDTO updateProductoDto)
+        [Route("{id}")]
+        public async Task<ActionResult> UpdateProducto([FromRoute] int id, [FromBody] UpdateProductoDTO updateProductoDto)
         {
             try
             {
-                await service.UpdateProducto(codigo, updateProductoDto);
+                await service.UpdateProducto(id, updateProductoDto);
                 return NoContent();
             }
             catch(KeyNotFoundException ex)
@@ -93,7 +93,7 @@ namespace API_Inventario.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { errorMessage = $"Error interno del servidor: {ex.Message}" });
+                return StatusCode(500, new { errorMessage = $"Error interno del servidor: {ex.Message} - {ex.InnerException}" });
             }
         }
 

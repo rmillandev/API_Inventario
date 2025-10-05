@@ -1,4 +1,6 @@
-﻿using API_Inventario.Models;
+﻿using API_Inventario.Dtos.CategoriaDtos;
+using API_Inventario.Models;
+using API_Inventario.Utils.Objects;
 
 namespace API_Inventario.Repositorys.Interfaces
 {

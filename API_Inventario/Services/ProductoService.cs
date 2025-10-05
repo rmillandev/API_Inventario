@@ -58,16 +58,21 @@ namespace API_Inventario.Services
             await repository.DeleteByCodigoProducto(codigo);
         }
 
-        public async Task UpdateProducto(int codigo, UpdateProductoDTO updateProductoDto)
+        public async Task UpdateProducto(int id, UpdateProductoDTO updateProductoDto)
         {
           
-            var producto = await repository.GetByCodigo(codigo);
+            var producto = await repository.GetById(id);
 
-            if (producto == null) throw new KeyNotFoundException("El codigo de este producto no existe.");
+            if (producto == null) throw new KeyNotFoundException("El ID no fue encontrado.");
 
-            mapper.Map(updateProductoDto, producto);
+            producto.Nombre = updateProductoDto.Nombre ?? producto.Nombre;
+            producto.Descripcion = updateProductoDto.Descripcion ?? producto.Descripcion;
+            producto.Precio = updateProductoDto.Precio ?? producto.Precio;
+            producto.StockActual = updateProductoDto.StockActual ?? producto.StockActual;
+            producto.CategoriaId = updateProductoDto.CategoriaId ?? producto.CategoriaId;
+            producto.ProveedorId = updateProductoDto.ProveedorId ?? producto.ProveedorId;
 
-            await repository.UpdateProducto(producto);
+            await repository.Update(id, producto);
 
         }
 

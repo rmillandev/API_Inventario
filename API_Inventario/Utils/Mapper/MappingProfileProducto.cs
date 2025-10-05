@@ -9,9 +9,12 @@ namespace API_Inventario.Utils.Mapper
 
         public MappingProfileProducto() {
 
-            CreateMap<UpdateProductoDTO, Producto>().ForAllMembers(opt => 
-                opt.Condition((objOrigen, objDestino, member) => member != null)
-            );
+            CreateMap<UpdateProductoDTO, Producto>()
+    .ForMember(dest => dest.CategoriaId, opt => opt.Ignore())
+    .ForMember(dest => dest.ProveedorId, opt => opt.Ignore())
+    .ForAllMembers(opt =>
+        opt.Condition((src, dest, srcMember) => srcMember != null));
+
 
         }
 

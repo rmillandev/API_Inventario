@@ -1,12 +1,13 @@
-﻿using API_Inventario.Models;
+﻿using API_Inventario.Dtos.CategoriaDtos;
+using API_Inventario.Models;
 using FluentValidation;
 
-namespace API_Inventario.Validations
+namespace API_Inventario.Validations.CategoriaValidation
 {
-    public class CategoriaValidator : AbstractValidator<Categoria>
+    public class CreateCategoriaValidator : AbstractValidator<CreateCategoriaDTO>
     {
 
-        public CategoriaValidator() 
+        public CreateCategoriaValidator()
         {
             RuleFor(c => c.Nombre)
                 .NotEmpty()
