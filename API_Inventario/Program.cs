@@ -6,6 +6,7 @@ using API_Inventario.Services.Interfaces;
 using API_Inventario.Utils.Mapper;
 using API_Inventario.Validations;
 using API_Inventario.Validations.CategoriaValidation;
+using API_Inventario.Validations.ProveedorValidation;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 

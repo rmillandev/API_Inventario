@@ -1,12 +1,12 @@
 ﻿using API_Inventario.Models;
 using FluentValidation;
 
-namespace API_Inventario.Validations
+namespace API_Inventario.Validations.ProveedorValidation
 {
     public class ProveedorValidator : AbstractValidator<Proveedor>
     {
 
-        public ProveedorValidator() 
+        public ProveedorValidator()
         {
 
             RuleFor(p => p.Nit)

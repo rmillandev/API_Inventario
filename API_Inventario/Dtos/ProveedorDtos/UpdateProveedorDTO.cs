@@ -1,10 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace API_Inventario.Dtos
+﻿namespace API_Inventario.Dtos.ProveedorDtos
 {
-    public class ProveedorDTO
+    public class UpdateProveedorDTO
     {
-        public int Id { get; set; }
         public string? Nit { get; set; }
         public string? Nombre { get; set; }
         public string? Telefono { get; set; }

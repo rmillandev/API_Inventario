@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using API_Inventario.Dtos;
+using API_Inventario.Dtos.ProveedorDTO;
+using API_Inventario.Dtos.ProveedorDtos;
 using API_Inventario.Models;
 using API_Inventario.Services.Interfaces;
 using API_Inventario.Utils.Objects;
@@ -24,11 +25,11 @@ namespace API_Inventario.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<PagedResult<Proveedor>>> GetAll([FromQuery] int? pageNumber, [FromQuery] int? pageSize)
+        public async Task<ActionResult<PagedResult<ReadProveedorDTO>>> GetAllDto([FromQuery] int? pageNumber, [FromQuery] int? pageSize)
         {
             try
             {
-                var data = await service.GetAll(pageNumber, pageSize);
+                var data = await service.GetAllDto(pageNumber, pageSize);
                 return Ok(data);
             }
             catch (Exception ex) {
@@ -61,71 +62,52 @@ namespace API_Inventario.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<CreateSuccessResponse<Proveedor>>> Create([FromBody] Proveedor proveedor, [FromServices] IValidator<Proveedor> validator)
+        public async Task<ActionResult<CreateSuccessResponse<CreateProveedorDTO>>> CreateProveedor([FromBody] CreateProveedorDTO proveedorDto, [FromServices] IValidator<CreateProveedorDTO> validator)
         {
             try
             {
-                var resultValditor = await validator.ValidateAsync(proveedor);
+                var resultValditor = await validator.ValidateAsync(proveedorDto);
 
                 if (!resultValditor.IsValid) return BadRequest(resultValditor);
 
-                var data = await service.Create(proveedor);
+                var data = await service.CreateProveedor(proveedorDto);
+
+                if (!data.Success) return Conflict(new { errorMessage = data.Message });
 
                 return Ok(data);
             }
-            catch (InvalidOperationException ex)
-            {
-                return Conflict(new
-                {
-                    errorMessage = ex.Message,
-                });
-            }
             catch (Exception ex)
             {
-                return StatusCode(500, new
-                {
-                    errorMessage = $"Error interno del servidor: {ex.Message}"
-                });
+                return StatusCode(500, new { errorMessage = $"Error interno del servidor: {ex.Message}" });
             }
         }
 
         [HttpPut]
         [Route("{id}")]
-        public async Task<ActionResult> Update([FromRoute] int id, [FromBody] ProveedorDTO proveedor, [FromServices] IValidator<ProveedorDTO> validator)
+        public async Task<ActionResult> UpdateProveedor([FromRoute] int id, [FromBody] UpdateProveedorDTO proveedorDto, [FromServices] IValidator<UpdateProveedorDTO> validator)
         {
             try
             {
-                var exist = await service.GetById(id);
 
-                if (exist == null) return NotFound();
-                var resultValditor = await validator.ValidateAsync(proveedor);
+                var resultValditor = await validator.ValidateAsync(proveedorDto);
 
                 if (!resultValditor.IsValid) return BadRequest(resultValditor);
 
-                await service.UpdateProveedor(id, proveedor);
+                await service.UpdateProveedor(id, proveedorDto);
 
                 return NoContent();
             }
             catch (InvalidOperationException ex)
             {
-                return Conflict(new
-                {
-                    errorMessage = ex.Message,
-                });
+                return Conflict(new { errorMessage = ex.Message });
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(new
-                {
-                    errorMessage = ex.Message,
-                });
+                return NotFound(new { errorMessage = ex.Message });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new
-                {
-                    errorMessage = $"Error interno del servidor: {ex.Message}"
-                });
+                return StatusCode(500, new { errorMessage = $"Error interno del servidor: {ex.Message}" });
             }
         }
 
