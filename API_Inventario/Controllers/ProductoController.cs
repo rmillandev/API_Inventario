@@ -23,11 +23,11 @@ namespace API_Inventario.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<PagedResult<ReadProductoDTO>>> GetAll([FromQuery] int? pageNumber, [FromQuery] int? pageSize)
+        public async Task<ActionResult<PagedResult<ReadProductoDTO>>> GetAll([FromQuery] int? pageNumber, [FromQuery] int? pageSize, [FromQuery] int? categoriaId, [FromQuery] int? proveedorId)
         {
             try
             {
-                var data = await service.GetAllDto(pageNumber, pageSize);
+                var data = await service.GetAllDto(pageNumber, pageSize, categoriaId, proveedorId);
                 return Ok(data);
             }
             catch (Exception ex)

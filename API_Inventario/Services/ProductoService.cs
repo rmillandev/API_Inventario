@@ -24,10 +24,15 @@ namespace API_Inventario.Services
             return await repository.ExistsByCodigo(codigo);
         }
 
-        public async Task<PagedResult<ReadProductoDTO>> GetAllDto(int? pageNumber, int? pageSize)
+        public async Task<PagedResult<ReadProductoDTO>> GetAllDto(int? pageNumber, int? pageSize, int? categoriaId, int? proveedorId)
         {
-            var query = repository.GetAllQuery()
-                .Select(p => new ReadProductoDTO
+            var query = repository.GetAllQuery();
+
+            if (categoriaId.HasValue) query = query.Where(p => p.CategoriaId == categoriaId);
+
+            if (proveedorId.HasValue) query = query.Where(p => p.ProveedorId == proveedorId);
+
+            var queryDto = query.Select(p => new ReadProductoDTO
                 {
                     Codigo = p.Codigo,
                     Nombre = p.Nombre,
@@ -37,7 +42,7 @@ namespace API_Inventario.Services
                     Categoria = p.Categoria.Nombre,
                     Proveedor = p.Proveedor.Nombre
                 });
-            return await query.ToPagedResultAsync(pageNumber, pageSize);
+            return await queryDto.ToPagedResultAsync(pageNumber, pageSize);
         }
 
         public override async Task<CreateSuccessResponse<Producto>> Create(Producto producto)
