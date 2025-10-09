@@ -9,5 +9,6 @@ namespace API_Inventario.Services.Interfaces
         Task<PagedResult<ReadProductoDTO>> GetAllDto(int? pageNumber, int? pageSize, int? categoriaId, int? proveedorId);
         Task DeleteByCodigoProducto(int codigo);
         Task UpdateProducto(int codigo, UpdateProductoDTO updateProductoDto);
+        Task<PagedResult<ReadLowStockProductoDto>> GetLowStockProducts(int? pageNumber, int? pageSize);
     }
 }

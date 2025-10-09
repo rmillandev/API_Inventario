@@ -116,5 +116,21 @@ namespace API_Inventario.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("stock-bajo")]
+        public async Task<ActionResult<PagedResult<ReadLowStockProductoDto>>> GetLowStockProducts([FromQuery] int? pageNumber, [FromQuery] int? pageSize)
+
+        {
+            try
+            {
+                var data = await service.GetLowStockProducts(pageNumber, pageSize);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { errorMessage = $"Error interno del servidor: {ex.Message}" });
+            }
+        }
+
     }
 }

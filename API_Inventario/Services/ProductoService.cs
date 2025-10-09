@@ -32,7 +32,9 @@ namespace API_Inventario.Services
 
             if (proveedorId.HasValue) query = query.Where(p => p.ProveedorId == proveedorId);
 
-            var queryDto = query.Select(p => new ReadProductoDTO
+            var queryDto = query
+                .Where(p => p.Activo)
+                .Select(p => new ReadProductoDTO
                 {
                     Codigo = p.Codigo,
                     Nombre = p.Nombre,
@@ -51,6 +53,8 @@ namespace API_Inventario.Services
             var existeCodigo = await ExistsByCodigo(producto.Codigo);
 
             if (existeCodigo) throw new BusinessException("El codigo ya se encuentra registrado en otro producto. Por favor verifique la informacion.");
+
+            if (producto.StockActual < producto.StockMinimo) throw new BusinessException("El StockActual no puede ser menor que el StockMinimo.");
 
             var res = await repository.Create(producto);
 
@@ -79,6 +83,24 @@ namespace API_Inventario.Services
 
             await repository.Update(id, producto);
 
+        }
+
+        public async Task<PagedResult<ReadLowStockProductoDto>> GetLowStockProducts(int? pageNumber, int? pageSize)
+        { 
+            var query = repository.GetAllQuery()
+                .Where(p => p.StockActual < p.StockMinimo)
+                .Select(p => new ReadLowStockProductoDto
+                {
+                    Codigo = p.Codigo,
+                    Nombre = p.Nombre,
+                    Descripcion = p.Descripcion,
+                    Precio = p.Precio,
+                    StockActual = p.StockActual,
+                    Categoria = p.Categoria.Nombre,
+                    Proveedor = p.Proveedor.Nombre,
+                    StockBajo = (p.StockActual == 0 || !p.Activo) ? "No hay unidades disponibles" : "Quedan pocas unidades"
+                });
+            return await query.ToPagedResultAsync(pageNumber, pageSize);
         }
 
     }
