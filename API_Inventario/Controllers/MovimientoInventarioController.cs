@@ -39,5 +39,18 @@ namespace API_Inventario.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<ActionResult<PagedResult<HistorialMovimientoInventarioDto>>> GetMovimientoInventarioHistory([FromQuery] int? pageNumber, [FromQuery] int? pageSize)
+        {
+            try
+            {
+                var data = await service.GetMovimientoInventarioHistory(pageNumber, pageSize);
+                return Ok(data);
+            } catch (Exception ex)
+            {
+                return StatusCode(500, new { errorMessage = $"Error interno del servidor: {ex.InnerException}" });
+            }
+        }
+
     }
 }
