@@ -3,6 +3,7 @@ using API_Inventario.Models;
 using API_Inventario.Repositorys.Interfaces;
 using API_Inventario.Services.Interfaces;
 using API_Inventario.Utils;
+using API_Inventario.Utils.Constanst;
 using API_Inventario.Utils.Exceptions;
 using API_Inventario.Utils.Objects;
 using AutoMapper;
@@ -101,6 +102,27 @@ namespace API_Inventario.Services
                     StockBajo = (p.StockActual == 0 || !p.Activo) ? "No hay unidades disponibles" : "Quedan pocas unidades"
                 });
             return await query.ToPagedResultAsync(pageNumber, pageSize);
+        }
+
+        public async Task UpdateStockProduct(int id, int cantidad, string tipoMovimiento)
+        {
+            var producto = await repository.GetById(id);
+
+            if (producto == null) throw new KeyNotFoundException("El producto no existe.");
+
+            if (tipoMovimiento == ConstantsMovimientoInventario.TIPO_MOVIMIENTO_ENTRADA)
+            {
+                producto.StockActual += cantidad;
+            } else if (tipoMovimiento == ConstantsMovimientoInventario.TIPO_MOVIMIENTO_SALIDA)
+            {
+                if (producto.StockActual < cantidad) throw new BusinessException("Stock insuficiente para realizar la salida.");
+
+                producto.StockActual -= cantidad;
+            }
+
+            producto.Activo = producto.StockActual > 0;
+
+            await repository.Update(id, producto);
         }
 
     }

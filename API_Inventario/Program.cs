@@ -4,8 +4,8 @@ using API_Inventario.Repositorys.Interfaces;
 using API_Inventario.Services;
 using API_Inventario.Services.Interfaces;
 using API_Inventario.Utils.Mapper;
-using API_Inventario.Validations;
 using API_Inventario.Validations.CategoriaValidation;
+using API_Inventario.Validations.MovimientoInventarioValidation;
 using API_Inventario.Validations.ProveedorValidation;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
@@ -28,15 +28,23 @@ builder.Services.AddValidatorsFromAssemblyContaining<CreateCategoriaValidator>()
 builder.Services.AddValidatorsFromAssemblyContaining<ProveedorValidator>();
 
 // Producto Validator
-builder.Services.AddValidatorsFromAssemblyContaining<CreateProductoDTOValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateProductoDtoValidator>();
+
+// Movimiento Validator
+builder.Services.AddValidatorsFromAssemblyContaining<CreateMovimientoDtoValidator>();
 
 
 builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
 builder.Services.AddScoped<ICategoriaService, CategoriaService>();
+
 builder.Services.AddScoped<IProveedorRepository, ProveedorRepository>();
 builder.Services.AddScoped<IProveedorService, ProveedorService>();
+
 builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
 builder.Services.AddScoped<IProductoService, ProductoService>();
+
+builder.Services.AddScoped<IMovimientoInventarioRepository, MovimientoInventarioRepository>();
+builder.Services.AddScoped<IMovimientoInventarioService, MovimientoInventarioService>();
 
 var app = builder.Build();
 
