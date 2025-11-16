@@ -66,27 +66,31 @@ Las entidades principales y sus relaciones son:
 ## 7. Endpoints Propuestos
 
 ### Productos
-- `GET /api/productos` 
-- `GET /api/productos/{id}`  
+- `GET /api/productos?pageNumber=1&pageSize=10` (los query son opcionales)
+- `GET /api/productos?pageNumber=1&pageSize=10&categoriaId=1&proveedorId=1` (los query son opcionales)
+- `GET /api/productos/{id}`
+- `GET /api/productos/stock-bajo?pageNumber=1&pageSize=10`  
 - `POST /api/productos`  
 - `PUT /api/productos/{id}`  
 - `DELETE /api/productos/{id}`  
 
 ### Categorías
-- `GET /api/categorias`  
+- `GET /api/categorias?pageNumber=1&pageSize=10` (los query son opcionales)
+- `GET /api/categorias/{id}`  
 - `POST /api/categorias`  
 - `PUT /api/categorias/{id}`  
 - `DELETE /api/categorias/{id}`  
 
 ### Proveedores
-- `GET /api/proveedores`  
+- `GET /api/proveedores?pageNumber=1&pageSize=10` (los query son opcionales)
+- `GET /api/proveedores/{id}`  
 - `POST /api/proveedores`  
 - `PUT /api/proveedores/{id}`  
 - `DELETE /api/proveedores/{id}`  
 
 ### Movimientos
-- `POST /api/movimientos`
-- `GET /api/movimientos/producto/{id}`  
+- `POST /api/movimiento-inventario`
+- `GET /api/movimiento-inventario?pageNumber=1&pageSize=10` (los query son opcionales)
 
 ---
 
