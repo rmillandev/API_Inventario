@@ -4,6 +4,7 @@ using API_Inventario.Services;
 using API_Inventario.Services.Interfaces;
 using API_Inventario.Utils.Objects;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +12,7 @@ namespace API_Inventario.Controllers
 {
     [Route("api/categoria")]
     [ApiController]
+    [Authorize]
     public class CategoriaController : ControllerBase
     {
 

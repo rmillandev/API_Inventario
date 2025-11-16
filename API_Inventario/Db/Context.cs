@@ -11,5 +11,6 @@ namespace API_Inventario.Db
         public DbSet<Proveedor> Proveedor { get; set; }
         public DbSet<Producto> Producto { get; set; }
         public DbSet<MovimientoInventario> MovimientoInventario { get; set; }
+        public DbSet<Usuario> Usuario { get; set; }
     }
 }

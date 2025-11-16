@@ -5,6 +5,7 @@ using API_Inventario.Models;
 using API_Inventario.Services.Interfaces;
 using API_Inventario.Utils.Objects;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -13,6 +14,7 @@ namespace API_Inventario.Controllers
 {
     [Route("api/proveedor")]
     [ApiController]
+    [Authorize]
     public class ProveedorController : ControllerBase
     {
 

@@ -5,6 +5,7 @@ using API_Inventario.Services.Interfaces;
 using API_Inventario.Utils.Exceptions;
 using API_Inventario.Utils.Objects;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -12,6 +13,7 @@ namespace API_Inventario.Controllers
 {
     [Route("api/producto")]
     [ApiController]
+    [Authorize]
     public class ProductoController : ControllerBase
     {
 
