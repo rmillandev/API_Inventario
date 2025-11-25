@@ -15,18 +15,18 @@ namespace API_Inventario.Services
             this.repository = repository;
         }
 
+        public override Task<Categoria?> GetById(int id)
+        {
+            var categoria = repository.GetById(id);
+            if (categoria == null) throw new KeyNotFoundException("Categoria no encontrada");
+            return categoria;
+        }
+
         public async Task<CreateSuccessResponse<CreateCategoriaDTO>> CreateCategoria(CreateCategoriaDTO categoriaDto) 
         {
             bool exists = await repository.ExistsByName(categoriaDto.Nombre);
 
-            if (exists)
-            {
-                return new CreateSuccessResponse<CreateCategoriaDTO>
-                { 
-                    Success = false,
-                    Message = "No se creo el registro. Este nombre de categoria ya se encuentra registrado."
-                };
-            }
+            if (exists) throw new InvalidOperationException("No se creo el registro. Este nombre de categoria ya existe.");
 
             Categoria categoria = new Categoria()
             {
@@ -63,6 +63,13 @@ namespace API_Inventario.Services
 
             await repository.Update(id, categoria);
 
+        }
+
+        public override async Task Delete(int id)
+        {
+            var categoria = await repository.GetById(id);
+            if (categoria == null) throw new KeyNotFoundException("Categoria no encontrada");
+            await repository.Delete(id);
         }
 
     }

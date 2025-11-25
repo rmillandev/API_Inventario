@@ -20,7 +20,7 @@ namespace API_Inventario.Services
             return await repository.GetAll(pageNumber, pageSize);
         }
 
-        public async Task<T?> GetById(int id) => await repository.GetById(id);
+        public virtual async Task<T?> GetById(int id) => await repository.GetById(id);
 
         public virtual async Task<CreateSuccessResponse<T>> Create(T data)
         {
@@ -32,7 +32,7 @@ namespace API_Inventario.Services
             await repository.Update(id, data);
         }
 
-        public async Task Delete(int id)
+        public virtual async Task Delete(int id)
         {
             await repository.Delete(id);
         }

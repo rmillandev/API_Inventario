@@ -1,5 +1,8 @@
+using System.Reflection;
 using System.Text;
 using API_Inventario.Db;
+using API_Inventario.Filters;
+using API_Inventario.Middleware;
 using API_Inventario.Repositorys;
 using API_Inventario.Repositorys.Interfaces;
 using API_Inventario.Services;
@@ -16,26 +19,18 @@ using Microsoft.IdentityModel.Tokens;
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(opt =>
+{
+    opt.Filters.Add<ValidationFilter>();
+});
 builder.Services.AddOpenApi();
 builder.Services.AddDbContext<Context>(opt =>
     opt.UseSqlServer(builder.Configuration.GetConnectionString("Connection"))
 );
 
+builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
 builder.Services.AddAutoMapper(cfg => {}, typeof(MappingProfileProducto));
-
-// Categoria Validator
-builder.Services.AddValidatorsFromAssemblyContaining<CreateCategoriaValidator>();
-
-// Proveedor Validator
-builder.Services.AddValidatorsFromAssemblyContaining<ProveedorValidator>();
-
-// Producto Validator
-builder.Services.AddValidatorsFromAssemblyContaining<CreateProductoDtoValidator>();
-
-// Movimiento Validator
-builder.Services.AddValidatorsFromAssemblyContaining<CreateMovimientoDtoValidator>();
-
 
 builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
 builder.Services.AddScoped<ICategoriaService, CategoriaService>();
@@ -75,6 +70,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 var app = builder.Build();
+
+app.UseExceptionHandling();
 
 if (app.Environment.IsDevelopment())
 {
