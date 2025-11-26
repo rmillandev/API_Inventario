@@ -1,23 +1,20 @@
-﻿using API_Inventario.Dtos.ProductoDtos;
+﻿using API_Inventario.Dtos;
+using API_Inventario.Dtos.ProductoDtos;
 using API_Inventario.Models;
 using API_Inventario.Repositorys.Interfaces;
 using API_Inventario.Services.Interfaces;
 using API_Inventario.Utils;
 using API_Inventario.Utils.Constanst;
-using API_Inventario.Utils.Exceptions;
 using API_Inventario.Utils.Objects;
-using AutoMapper;
 
 namespace API_Inventario.Services
 {
     public class ProductoService : GenericService<Producto>, IProductoService
     {
         private readonly IProductoRepository repository;
-        private readonly IMapper mapper;
-        public ProductoService(IProductoRepository repository, IMapper mapper) : base(repository)
+        public ProductoService(IProductoRepository repository) : base(repository)
         {
             this.repository = repository; 
-            this.mapper = mapper;
         }
 
         private async Task<bool> ExistsByCodigo(int codigo)
@@ -48,24 +45,43 @@ namespace API_Inventario.Services
             return await queryDto.ToPagedResultAsync(pageNumber, pageSize);
         }
 
-        public override async Task<CreateSuccessResponse<Producto>> Create(Producto producto)
+        public async Task<CreateSuccessResponse<CreateProductoDTO>> CreateProducto(CreateProductoDTO productoDto)
         {
 
-            var existeCodigo = await ExistsByCodigo(producto.Codigo);
+            var existeCodigo = await ExistsByCodigo(productoDto.Codigo);
 
-            if (existeCodigo) throw new BusinessException("El codigo ya se encuentra registrado en otro producto. Por favor verifique la informacion.");
+            if (existeCodigo) throw new InvalidOperationException("El codigo ya se encuentra registrado en otro producto. Por favor verifique la informacion.");
 
-            if (producto.StockActual < producto.StockMinimo) throw new BusinessException("El StockActual no puede ser menor que el StockMinimo.");
+            if (productoDto.StockActual < productoDto.StockMinimo) throw new InvalidOperationException("El StockActual no puede ser menor que el StockMinimo.");
+
+            Producto producto = new Producto()
+            {
+                Codigo = productoDto.Codigo,
+                Nombre = productoDto.Nombre,
+                Descripcion = productoDto.Descripcion,
+                Precio = productoDto.Precio,
+                StockActual = productoDto.StockActual,
+                StockMinimo = productoDto.StockMinimo,
+                Activo = productoDto.Activo,
+                CategoriaId = productoDto.CategoriaId,
+                ProveedorId = productoDto.ProveedorId
+            };
 
             var res = await repository.Create(producto);
 
-            return res;
+            return new CreateSuccessResponse<CreateProductoDTO> 
+            {
+                Data = productoDto,
+                Success = true,
+                Message = "Producto creado correctamente."
+            };
 
         }
 
         public async Task DeleteByCodigoProducto(int codigo)
         {
-            await repository.DeleteByCodigoProducto(codigo);
+            var res = await repository.DeleteByCodigoProducto(codigo);
+            if (res == 0) throw new KeyNotFoundException("No se pudo eliminar el producto. El codigo no existe.");
         }
 
         public async Task UpdateProducto(int id, UpdateProductoDTO updateProductoDto)
@@ -115,7 +131,7 @@ namespace API_Inventario.Services
                 producto.StockActual += cantidad;
             } else if (tipoMovimiento == ConstantsMovimientoInventario.TIPO_MOVIMIENTO_SALIDA)
             {
-                if (producto.StockActual < cantidad) throw new BusinessException("Stock insuficiente para realizar la salida.");
+                if (producto.StockActual < cantidad) throw new InvalidOperationException("Stock insuficiente para realizar la salida.");
 
                 producto.StockActual -= cantidad;
             }

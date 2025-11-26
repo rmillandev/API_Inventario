@@ -42,9 +42,14 @@ namespace API_Inventario.Middleware
                     statusCode = HttpStatusCode.Conflict;
                     message = ex.Message;
                     break;
+                case UnauthorizedAccessException _:
+                    statusCode = HttpStatusCode.Unauthorized;
+                    message = ex.Message;
+                    break;
 
 
                 default:
+                    message = $"An unexpected error occurred. {ex.Message}";
                     break;
             }
 

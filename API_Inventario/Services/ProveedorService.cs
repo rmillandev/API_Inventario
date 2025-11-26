@@ -34,14 +34,7 @@ namespace API_Inventario.Services
         public async Task<CreateSuccessResponse<CreateProveedorDTO>> CreateProveedor(CreateProveedorDTO proveedorDto)
         {
             var exist = await ExistsByNit(proveedorDto.Nit);
-            if (exist)
-            {
-                return new CreateSuccessResponse<CreateProveedorDTO>
-                { 
-                    Success = false,
-                    Message = "No se creo el proveedor porque el nit ya se encuentra registrado."
-                };
-            }
+            if (exist) throw new InvalidOperationException("No se creo el proveedor porque el nit ya se encuentra registrado.");
 
             Proveedor proveedor = new Proveedor() 
             { 
@@ -81,6 +74,13 @@ namespace API_Inventario.Services
             proveedor.Direccion = proveedorDto.Direccion ?? proveedor.Direccion;
 
             await repository.Update(id, proveedor);
+        }
+
+        public override async Task Delete(int id)
+        {
+            var proveedor = await repository.GetById(id);
+            if (proveedor == null) throw new KeyNotFoundException("Proveedor no encontrado.");
+            await repository.Delete(id);
         }
 
         private async Task<bool> ExistsByNit(string nit)

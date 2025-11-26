@@ -24,10 +24,10 @@ namespace API_Inventario.Repositorys
             return await entities.FirstOrDefaultAsync(p => p.Codigo == codigo);
         }
 
-        public async Task DeleteByCodigoProducto(int codigo)
+        public async Task<int> DeleteByCodigoProducto(int codigo)
         {
             int deleted = await entities.Where(p => p.Codigo == codigo).ExecuteDeleteAsync();
-            if (deleted == 0) throw new BusinessException("Este codigo de producto no existe.");
+            return deleted;
         }
 
         public async Task UpdateProducto(Producto producto)

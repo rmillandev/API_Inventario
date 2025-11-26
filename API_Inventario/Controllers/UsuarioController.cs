@@ -21,22 +21,10 @@ namespace API_Inventario.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<ShowSuccessCreateUserDTO>> CreateUsuario([FromBody] CreateUsuarioDTO usuarioDto, [FromServices] IValidator<CreateUsuarioDTO> validator)
+        public async Task<ActionResult<ShowSuccessCreateUserDTO>> CreateUsuario([FromBody] CreateUsuarioDTO usuarioDto)
         {
-            try
-            {
-                var resultValidator = await validator.ValidateAsync(usuarioDto);
-
-                if (!resultValidator.IsValid) return BadRequest(resultValidator);
-
-                var data = await service.CreateUsuario(usuarioDto);
-
-                return Ok(data);
-
-            } catch (Exception ex)
-            {
-                return StatusCode(500, new { errorMessage = $"Error interno del servidor: {ex.Message} - {ex.InnerException}" });
-            }
+            var data = await service.CreateUsuario(usuarioDto);
+            return Ok(data);
         }
 
     }

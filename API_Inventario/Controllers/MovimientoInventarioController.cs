@@ -21,37 +21,17 @@ namespace API_Inventario.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<CreateSuccessResponse<CreateMovimientoDto>>> CreateMovimientoInventario([FromBody] CreateMovimientoDto createMovimientoDto, [FromServices] IValidator<CreateMovimientoDto> validator)
+        public async Task<ActionResult<CreateSuccessResponse<CreateMovimientoDto>>> CreateMovimientoInventario([FromBody] CreateMovimientoDto createMovimientoDto)
         {
-            try
-            {
-                var resultValidator = await validator.ValidateAsync(createMovimientoDto);
-
-                if (!resultValidator.IsValid) return BadRequest(resultValidator);
-
-                var res = await service.CreateMovimientoInventario(createMovimientoDto);
-
-                if (!res.Success) return Conflict(res);
-                
-                return Ok(res);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { errorMessage = $"Error interno del servidor: {ex.InnerException}" });
-            }
+            var res = await service.CreateMovimientoInventario(createMovimientoDto);
+            return Ok(res);
         }
 
         [HttpGet]
         public async Task<ActionResult<PagedResult<HistorialMovimientoInventarioDto>>> GetMovimientoInventarioHistory([FromQuery] int? pageNumber, [FromQuery] int? pageSize)
         {
-            try
-            {
-                var data = await service.GetMovimientoInventarioHistory(pageNumber, pageSize);
-                return Ok(data);
-            } catch (Exception ex)
-            {
-                return StatusCode(500, new { errorMessage = $"Error interno del servidor: {ex.InnerException}" });
-            }
+            var data = await service.GetMovimientoInventarioHistory(pageNumber, pageSize);
+            return Ok(data);
         }
 
     }

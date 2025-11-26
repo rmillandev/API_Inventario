@@ -1,4 +1,9 @@
-﻿using API_Inventario.Dtos.CategoriaDtos;
+﻿using API_Inventario.Dtos;
+using API_Inventario.Dtos.CategoriaDtos;
+using API_Inventario.Dtos.MovimientoInventarioDtos;
+using API_Inventario.Dtos.ProveedorDTO;
+using API_Inventario.Dtos.ProveedorDtos;
+using API_Inventario.Dtos.UsuarioDtos;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -10,7 +15,8 @@ namespace API_Inventario.Filters
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var param = context.ActionArguments.SingleOrDefault(p =>
-                p.Value is CreateCategoriaDTO || p.Value is UpdateCategoriaDTO
+                p.Value is CreateCategoriaDTO || p.Value is UpdateCategoriaDTO || p.Value is CreateProductoDTO || p.Value is CreateProveedorDTO
+                || p.Value is UpdateProveedorDTO || p.Value is CreateMovimientoDto || p.Value is CreateUsuarioDTO || p.Value is LoginDTO
             );
 
             if (param.Value == null)
@@ -19,7 +25,7 @@ namespace API_Inventario.Filters
                 return;
             }
 
-            var validator = (IValidator) context.HttpContext.RequestServices.GetService(typeof(IValidator<>).MakeGenericType(param.Value.GetType()));
+            var validator = (IValidator)context.HttpContext.RequestServices.GetService(typeof(IValidator<>).MakeGenericType(param.Value.GetType()));
             if (validator == null)
             {
                 await next();

@@ -24,11 +24,7 @@ namespace API_Inventario.Services
             
             if (createMovimientoDto.TipoMovimiento != ConstantsMovimientoInventario.TIPO_MOVIMIENTO_ENTRADA && createMovimientoDto.TipoMovimiento != ConstantsMovimientoInventario.TIPO_MOVIMIENTO_SALIDA)
             {
-                return new CreateSuccessResponse<CreateMovimientoDto> 
-                {
-                    Success = false,
-                    Message = "Tipo de movimiento invalido."
-                };
+                throw new InvalidOperationException("Tipo de movimiento invalido.");
             }
 
             await productoService.UpdateStockProduct(createMovimientoDto.ProductoId, createMovimientoDto.Cantidad, createMovimientoDto.TipoMovimiento);

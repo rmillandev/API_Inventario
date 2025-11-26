@@ -20,33 +20,18 @@ namespace API_Inventario.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginDTO dto, [FromServices] IValidator<LoginDTO> validator)
+        public async Task<IActionResult> Login([FromBody] LoginDTO dto)
         {
-            try
+            var user = await usuarioService.ValidateUser(dto);
+            var token = tokenService.GenerarToken(user);
+
+            return Ok(new AuthResponseDTO
             {
-                var validationResult = await validator.ValidateAsync(dto);
-
-                if (!validationResult.IsValid) return BadRequest(validationResult);
-
-                var user = await usuarioService.ValidateUser(dto);
-
-                if (user == null) return Unauthorized(new { Message = "Credenciales invalidas." });
-
-                var token = tokenService.GenerarToken(user);
-
-                return Ok(new AuthResponseDTO 
-                {
-                    Token = token,
-                    Username = user.Username,
-                    Rol = user.Rol,
-                    Email = user.Email
-                });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { Message = $"Error interno del servidor: {ex.Message} - {ex.InnerException}" });
-            }
-
+                Token = token,
+                Username = user.Username,
+                Rol = user.Rol,
+                Email = user.Email
+            });
         }
     }
 }

@@ -20,14 +20,7 @@ namespace API_Inventario.Services
         {
             var userAlreadyExists = repository.UsernameAlreadyExist(usuarioDto.Username);
 
-            if (userAlreadyExists)
-            {
-                return new ShowSuccessCreateUserDTO
-                {
-                    Success = false,
-                    Message = "Este usuario ya existe."
-                };
-            }
+            if (userAlreadyExists) throw new InvalidOperationException("El nombre de usuario ya existe.");
 
             Usuario usuario = new Usuario()
             {
@@ -55,11 +48,13 @@ namespace API_Inventario.Services
         {
             var user = await repository.GetByUsername(dto.Username);
 
-            if (user == null) return null!;
+            if (user == null) throw new UnauthorizedAccessException("Credenciales invalidas.");
 
             bool verifiedPassword = passwordHasher.VerifyPassword(dto.Password, user.Password);
 
-            return verifiedPassword ? user! : null!;
+            if (!verifiedPassword) throw new UnauthorizedAccessException("Credenciales invalidas.");
+
+            return user;
         }
     }
 }

@@ -6,7 +6,7 @@ namespace API_Inventario.Repositorys.Interfaces
     {
         Task<bool> ExistsByCodigo(int codigo);
         Task<Producto?> GetByCodigo(int codigo); 
-        Task DeleteByCodigoProducto(int codigo);
+        Task<int> DeleteByCodigoProducto(int codigo);
         Task UpdateProducto(Producto producto);
     }
 }
