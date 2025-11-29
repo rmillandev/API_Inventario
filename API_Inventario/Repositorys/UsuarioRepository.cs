@@ -18,6 +18,11 @@ namespace API_Inventario.Repositorys
             return context.Usuario.Any(u => u.Username == username);
         }
 
+        public bool EmailAlreadyExist(string email)
+        {
+            return context.Usuario.Any(u => u.Email == email);
+        }
+
         public async Task<Usuario?> GetByUsername(string username)
         {
             return await context.Usuario.FirstOrDefaultAsync(u => u.Username == username);
